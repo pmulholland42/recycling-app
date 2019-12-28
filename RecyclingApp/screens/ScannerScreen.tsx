@@ -5,6 +5,10 @@ interface Props {};
 interface State {};
 
 export class ScannerScreen extends Component<Props, State> {
+    static navigationOptions = {
+        title: 'Scanner',
+    };
+
     constructor(props: Props) {
         super(props);
     }

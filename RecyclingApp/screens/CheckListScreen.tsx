@@ -5,6 +5,10 @@ interface Props {};
 interface State {};
 
 export class CheckListScreen extends Component<Props, State> {
+    static navigationOptions = {
+        title: 'Check List',
+    };
+
     constructor(props: Props) {
         super(props);
     }
