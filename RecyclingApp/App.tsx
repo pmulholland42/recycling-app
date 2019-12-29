@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { ScannerScreen } from './screens/ScannerScreen';
 import { CheckListScreen } from './screens/CheckListScreen'
+import colors from './constants/colors';
 
 const TabNavigator = createBottomTabNavigator(
     {
@@ -28,7 +29,7 @@ const TabNavigator = createBottomTabNavigator(
             },
         }),
         tabBarOptions: {
-            activeTintColor: 'green',
+            activeTintColor: colors.primaryGreen,
             inactiveTintColor: 'gray',
         },
     }
