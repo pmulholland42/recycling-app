@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import memoize from 'memoize-one'
 
 import RecyclingType from '../interfaces/RecyclingType';
+import colors from '../constants/colors';
 
 interface Props {};
 interface State {
@@ -138,16 +139,16 @@ export class CheckListScreen extends Component<Props, State> {
         let iconColor: string;
         if (item.isRecyclable === true) {
             iconName = 'check';
-            iconColor = "";
+            iconColor = colors.secondaryGreen;
         } else if (item.isRecyclable === false) {
             iconName = 'ban';
-            iconColor = "";
+            iconColor = colors.orange;
 
         } else {
             iconName = 'question';
-            iconColor = "";
-
+            iconColor = 'black';
         }
+        
         return  (
             <View style={{ flexDirection: "row" }}>
                 <Icon name={iconName} size={25} color={iconColor} style={{ flex: 1 }} />
@@ -163,9 +164,6 @@ export class CheckListScreen extends Component<Props, State> {
 
         return (
             <View>
-                <Text>
-                    CheckList
-                </Text>
                 { this.state.loading ?
                     (<Text>Loading</Text>) :
                     (<FlatList
