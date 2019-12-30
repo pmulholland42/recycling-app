@@ -5,6 +5,7 @@ import memoize from 'memoize-one'
 
 import RecyclingType from '../interfaces/RecyclingType';
 import colors from '../constants/colors';
+import styles from '../constants/styles';
 
 interface Props {};
 interface State {
@@ -25,6 +26,7 @@ export class CheckListScreen extends Component<Props, State> {
         }
 
         this.renderListItem = this.renderListItem.bind(this);
+        this.renderHeader = this.renderHeader.bind(this);
 
         this.getRecyclingTypes().then(types => {
             this.setState({ loading: false, types });
@@ -34,86 +36,86 @@ export class CheckListScreen extends Component<Props, State> {
     async getRecyclingTypes(): Promise<RecyclingType[]> {
         return [
             {
-                materialType: "plastic",
+                materialType: 'plastic',
                 plasticNumber: 1,
-                name: "Polyethylene Terephthalate",
-                code: "PETE",
+                name: 'Polyethylene Terephthalate',
+                code: 'PETE',
                 isRecyclable: true,
             },
             {
-                materialType: "plastic",
+                materialType: 'plastic',
                 plasticNumber: 2,
-                name: "High-Density Polyethylene",
-                code: "HDPE",
+                name: 'High-Density Polyethylene',
+                code: 'HDPE',
                 isRecyclable: true,
             },
             {
-                materialType: "plastic",
+                materialType: 'plastic',
                 plasticNumber: 3,
-                name: "Polyvinyl Chloride",
-                code: "PVC",
+                name: 'Polyvinyl Chloride',
+                code: 'PVC',
                 isRecyclable: false,
             },
             {
-                materialType: "plastic",
+                materialType: 'plastic',
                 plasticNumber: 4,
-                name: "Low-Density Polyethylene",
-                code: "LDPE",
+                name: 'Low-Density Polyethylene',
+                code: 'LDPE',
                 isRecyclable: false,
             },
             {
-                materialType: "plastic",
+                materialType: 'plastic',
                 plasticNumber: 5,
-                name: "Polypropylene",
-                code: "PP",
+                name: 'Polypropylene',
+                code: 'PP',
                 isRecyclable: false,
             },
             {
-                materialType: "plastic",
+                materialType: 'plastic',
                 plasticNumber: 6,
-                name: "Polystyrene",
-                code: "PS",
+                name: 'Polystyrene',
+                code: 'PS',
                 isRecyclable: true,
             },
             {
-                materialType: "plastic",
+                materialType: 'plastic',
                 plasticNumber: 7,
-                name: "Other Plastic",
+                name: 'Other',
                 isRecyclable: true,
             },
             {
-                materialType: "glass",
-                name: "Brown glass",
+                materialType: 'glass',
+                name: 'Brown glass',
                 isRecyclable: true,
             },
             {
-                materialType: "glass",
-                name: "Green glass",
+                materialType: 'glass',
+                name: 'Green glass',
                 isRecyclable: true,
             },
             {
-                materialType: "glass",
-                name: "Clear glass",
+                materialType: 'glass',
+                name: 'Clear glass',
                 isRecyclable: true,
             },
             {
-                materialType: "metal",
-                name: "Steel",
+                materialType: 'metal',
+                name: 'Steel',
                 isRecyclable: true,
             },
             {
-                materialType: "metal",
-                name: "Tin",
+                materialType: 'metal',
+                name: 'Tin',
                 isRecyclable: true,
             },
             {
-                materialType: "metal",
-                name: "Aluminum",
+                materialType: 'metal',
+                name: 'Aluminum',
                 isRecyclable: true,
             },
             {
-                materialType: "paper",
-                name: "Newspaper",
+                materialType: 'paper',
+                name: 'Newspaper',
             },
         ];
     }
@@ -134,6 +136,12 @@ export class CheckListScreen extends Component<Props, State> {
         }
     }
 
+    renderHeader() {
+        return (
+            <Text style={styles.checkListHeader}>Your recycling info for Swissvale:</Text>
+        )
+    }
+
     renderListItem({ item }: { item: RecyclingType }) {
         let iconName: string;
         let iconColor: string;
@@ -148,12 +156,22 @@ export class CheckListScreen extends Component<Props, State> {
             iconName = 'question';
             iconColor = 'black';
         }
-        
+
+        let itemDescription: string;
+        if (item.plasticNumber) {
+            itemDescription = `Plastic #${item.plasticNumber} - ${item.name}`;
+        } else {
+            itemDescription = item.name;
+        }
+        if (item.code) {
+            itemDescription += ` (${item.code})`;
+        }
+
         return  (
-            <View style={{ flexDirection: "row" }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', height: 50, paddingHorizontal: 20 }}>
                 <Icon name={iconName} size={25} color={iconColor} style={{ flex: 1 }} />
-                <View style={{ flex: 5 }}>
-                    <Text>{item.name}</Text>
+                <View style={{ flex: 5, flexDirection: 'row' }}>
+                    <Text style={styles.checkListText}>{itemDescription}</Text>
                 </View>
             </View>
         )
@@ -165,14 +183,14 @@ export class CheckListScreen extends Component<Props, State> {
         return (
             <View>
                 { this.state.loading ?
-                    (<Text>Loading</Text>) :
+                    (<Text>Loading...</Text>) :
                     (<FlatList
                         data={renderData}
                         renderItem={this.renderListItem}
+                        ListHeaderComponent={this.renderHeader}
+                        keyExtractor={item => item.name}
                     />)
                 }
-
-
             </View>
         )
     }
