@@ -8,7 +8,10 @@ const styles = StyleSheet.create({
     },
     defaultText: {
         fontSize: 16,
-    }
+    },
+    textBox: {
+
+    },
 });
 
 export default styles;

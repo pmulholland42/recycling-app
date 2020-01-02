@@ -65,6 +65,7 @@ export class Scanner extends Component<Props, State> {
     }
 
     stopScanning() {
+        this.closeModal();
         this.setState({ isScanning: false });
     }
 
