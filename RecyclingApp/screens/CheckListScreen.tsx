@@ -6,6 +6,7 @@ import memoize from 'memoize-one'
 import RecyclingType from '../interfaces/RecyclingType';
 import colors from '../constants/colors';
 import styles from '../constants/styles';
+import getRecyclablityIcon from '../utilities/Common';
 
 interface Props {};
 interface State {
@@ -169,9 +170,9 @@ export class CheckListScreen extends Component<Props, State> {
 
         return  (
             <View style={{ flexDirection: 'row', alignItems: 'center', height: 50, paddingHorizontal: 20 }}>
-                <Icon name={iconName} size={25} color={iconColor} style={{ flex: 1 }} />
+                {getRecyclablityIcon(item.isRecyclable, 25, { flex: 1 })}
                 <View style={{ flex: 5, flexDirection: 'row' }}>
-                    <Text style={styles.checkListText}>{itemDescription}</Text>
+                    <Text style={styles.defaultText}>{itemDescription}</Text>
                 </View>
             </View>
         )

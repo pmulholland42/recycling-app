@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         padding: 15,
     },
-    checkListText: {
+    defaultText: {
         fontSize: 16,
     }
 });

@@ -22,17 +22,25 @@ export class ScannerScreen extends Component<Props, State> {
             isScanning: false,
         }
 
-        this.scan = this.scan.bind(this);
+        this.startScanning = this.startScanning.bind(this);
+        this.stopScanning = this.stopScanning.bind(this);
     }
 
-    scan() {
+    startScanning() {
         this.setState({ isScanning: true });
     }
+
+    stopScanning() {
+        console.warn("yeet")
+        this.setState({ isScanning: false });
+    }
+
+
 
     render() {
         if (this.state.isScanning) {
             return (
-                <Scanner></Scanner>
+                <Scanner onStopScanning={this.stopScanning}></Scanner>
             );
         } else {
             return (
@@ -40,9 +48,9 @@ export class ScannerScreen extends Component<Props, State> {
                     <View style={{ width: "75%" }}>
                         <Button
                             title={"Press to begin scannning"}
-                            onPress={this.scan}
+                            onPress={this.startScanning}
                             buttonStyle={{
-                                backgroundColor: colors.primaryBlue,
+                                backgroundColor: colors.primaryGreen,
                                 height: 100,
                             }}
                             titleStyle={{
