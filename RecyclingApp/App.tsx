@@ -1,16 +1,28 @@
 import React from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createStackNavigator } from 'react-navigation-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
-import { ScannerScreen } from './screens/ScannerScreen';
+import { NewItem } from './components/NewItem';
+import { Scanner } from './components/Scanner'
 import { CheckListScreen } from './screens/CheckListScreen'
 import colors from './constants/colors';
 
+const ScannerStack = createStackNavigator({
+    Scanner,
+    NewItem,
+}, {
+    headerMode: 'none',
+});
+ScannerStack.navigationOptions = {
+    title: 'Scanner',
+}
+
 const TabNavigator = createBottomTabNavigator(
     {
-        ScannerScreen,
+        ScannerStack,
         CheckListScreen,
     },
     {
@@ -18,7 +30,7 @@ const TabNavigator = createBottomTabNavigator(
             tabBarIcon: ({ focused, horizontal, tintColor }) => {
                 const { routeName } = navigation.state;
                 let iconName: string = 'question';
-                if (routeName === 'ScannerScreen') {
+                if (routeName === 'ScannerStack') {
                     iconName = 'barcode';
                 } else if (routeName === 'CheckListScreen') {
                     iconName = 'check-square-o';
@@ -30,7 +42,7 @@ const TabNavigator = createBottomTabNavigator(
         }),
         tabBarOptions: {
             activeTintColor: colors.primaryBlue,
-            inactiveTintColor: 'gray',
+            inactiveTintColor: '#A9A9A9',
         },
     }
 );

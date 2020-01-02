@@ -10,7 +10,8 @@ import colors from '../constants/colors';
 
 interface Props {
     barcodeData: string,
-    onCancel: () => void,
+    closeModal: () => void,
+    addItem: () => void,
 };
 interface State {
     loading: boolean,
@@ -36,14 +37,14 @@ export class BarcodeInfo extends Component<Props, State> {
     }
 
     async checkBarcode(barcode: string): Promise<Item | null> {
-        return {
+        return null; /*{
             name: 'Folger\'s Noir Golden Dusk Instant Coffee',
             type: {
                 materialType: 'glass',
                 name: 'Clear glass',
                 isRecyclable: true,
             },
-        };
+        };*/
     }
 
     render() {
@@ -70,7 +71,7 @@ export class BarcodeInfo extends Component<Props, State> {
                     <Text style={styles.headerText}>{recycabilityInfo}</Text>
                     <Button
                             title={'Continue scanning'}
-                            onPress={this.props.onCancel}
+                            onPress={this.props.closeModal}
                             buttonStyle={{
                                 backgroundColor: colors.primaryGreen,
                                 height: 50,
@@ -88,10 +89,10 @@ export class BarcodeInfo extends Component<Props, State> {
                     <Text style={styles.defaultText}>Would you like to add this item?</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '80%', paddingTop: 20 }}>
                         <Button
-                            title={'Add item'}
-                            onPress={() => {}}
+                            title={'Cancel'}
+                            onPress={this.props.closeModal}
                             buttonStyle={{
-                                backgroundColor: colors.primaryGreen,
+                                backgroundColor: 'grey',
                                 height: 50,
                             }}
                             titleStyle={{
@@ -99,10 +100,10 @@ export class BarcodeInfo extends Component<Props, State> {
                             }}
                         />
                         <Button
-                            title={'Cancel'}
-                            onPress={this.props.onCancel}
+                            title={'Add item'}
+                            onPress={this.props.addItem}
                             buttonStyle={{
-                                backgroundColor: 'grey',
+                                backgroundColor: colors.primaryGreen,
                                 height: 50,
                             }}
                             titleStyle={{
