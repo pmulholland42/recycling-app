@@ -139,7 +139,7 @@ export class CheckListScreen extends Component<Props, State> {
 
     renderHeader() {
         return (
-            <Text style={styles.checkListHeader}>Your recycling info for Swissvale:</Text>
+            <Text style={styles.headerText}>Your recycling info for Swissvale:</Text>
         )
     }
 

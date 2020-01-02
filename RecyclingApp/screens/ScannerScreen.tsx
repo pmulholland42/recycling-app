@@ -31,11 +31,8 @@ export class ScannerScreen extends Component<Props, State> {
     }
 
     stopScanning() {
-        console.warn("yeet")
         this.setState({ isScanning: false });
     }
-
-
 
     render() {
         if (this.state.isScanning) {
