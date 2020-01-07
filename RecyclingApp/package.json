@@ -32,7 +32,6 @@
     "@react-native-community/eslint-config": "^0.0.5",
     "@types/jest": "^24.0.24",
     "@types/react-native": "^0.60.25",
-    "@types/react-native-elements": "^0.18.0",
     "@types/react-native-popup-dialog": "^0.16.2",
     "@types/react-native-vector-icons": "^6.4.5",
     "@types/react-test-renderer": "16.9.1",
