@@ -3,12 +3,17 @@ import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import { createStore, combineReducers } from 'redux';
+import { Provider } from 'react-redux';
+import { recyclingTypesReducer } from './redux/reducers';
 
 import { NewItem } from './components/NewItem';
 import { Scanner } from './components/Scanner'
 import { CheckListScreen } from './screens/CheckListScreen'
 import colors from './constants/colors';
+
+var reducers = combineReducers({ recyclingTypesReducer });
+export var store = createStore(reducers);
 
 const ScannerStack = createStackNavigator({
     Scanner,
@@ -47,5 +52,15 @@ const TabNavigator = createBottomTabNavigator(
     }
 );
 
-export default createAppContainer(TabNavigator);
+const AppContainer = createAppContainer(TabNavigator);
+
+const App = () => {
+    return (
+        <Provider store={store}>
+            <AppContainer />
+        </Provider>
+    );
+}
+
+export default App;
 

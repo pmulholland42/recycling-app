@@ -29,7 +29,7 @@ export class NewItem extends Component<Props, State> {
     render() {
 
         return (
-            <View>
+            <View style={{ padding: 20 }}>
                 <Text style={styles.headerText}>Add a new item</Text>
                 <Text style={styles.defaultText}>Name of item:</Text>
                 <TextInput
@@ -38,6 +38,7 @@ export class NewItem extends Component<Props, State> {
                     value={this.state.name}
                     onChangeText={name => { this.setState({ name }) }}
                 />
+
                 <Text style={styles.defaultText}>Material type:</Text>
             </View>
         )
