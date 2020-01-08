@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../constants/colors'
 import { StyleProp, TextStyle } from 'react-native';
 import Material from 'interfaces/Material';
+import { store } from '../App'
 
 export function getRecyclabilityIcon(isRecyclable: boolean | undefined, size: number, style?: StyleProp<TextStyle>) {
     let iconName: string;
@@ -34,4 +35,9 @@ export function getMaterialDescription(material: Material): string {
         description += ` (${material.code})`;
     }
     return description;
+}
+
+export function isRecyclable(material: Material): boolean | undefined {
+    var recyclabilityMap = store.getState().recyclingReducer.recyclabilityMap;
+    return recyclabilityMap.get(material.id);
 }

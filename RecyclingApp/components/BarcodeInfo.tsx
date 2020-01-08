@@ -4,7 +4,7 @@ import { Button } from 'react-native-elements'
 
 import NewItem from './NewItem'
 import Item from '../interfaces/Item';
-import { getRecyclabilityIcon } from '../utilities/Common';
+import { getRecyclabilityIcon, isRecyclable } from '../utilities/Common';
 import styles from '../constants/styles';
 import colors from '../constants/colors';
 
@@ -39,10 +39,10 @@ export class BarcodeInfo extends Component<Props, State> {
     async checkBarcode(barcode: string): Promise<Item | null> {
         return null; /*{
             name: 'Folger\'s Noir Golden Dusk Instant Coffee',
-            type: {
+            material: {
+                id: 8,
                 type: 'glass',
                 name: 'Clear glass',
-                isRecyclable: true,
             },
         };*/
     }
@@ -55,10 +55,11 @@ export class BarcodeInfo extends Component<Props, State> {
                 </View>
             );
         } else if (this.state.item) {
+            var recyclable = isRecyclable(this.state.item.material);
             var recycabilityInfo: string;
-            if (this.state.item.material.isRecyclable === true) {
+            if (recyclable === true) {
                 recycabilityInfo = 'This item can be recycled!';
-            } else if (this.state.item.material.isRecyclable === false) {
+            } else if (recyclable === false) {
                 recycabilityInfo = 'This item cannot be recycled.';
             } else {
                 recycabilityInfo = 'This item\'s recycability status in your area is unknown.';
@@ -67,7 +68,7 @@ export class BarcodeInfo extends Component<Props, State> {
             return (
                 <View style={{ alignItems: 'center' }}>
                     <Text style={styles.headerText}>{this.state.item.name}</Text>
-                    {getRecyclabilityIcon(this.state.item.material.isRecyclable, 70)}
+                    {getRecyclabilityIcon(recyclable, 70)}
                     <Text style={styles.headerText}>{recycabilityInfo}</Text>
                     <Button
                             title={'Continue scanning'}

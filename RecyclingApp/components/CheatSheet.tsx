@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import Material from '../interfaces/Material';
 import colors from '../constants/colors';
 import styles from '../constants/styles';
-import { getRecyclabilityIcon, getMaterialDescription} from '../utilities/Common';
+import { getRecyclabilityIcon, getMaterialDescription, isRecyclable} from '../utilities/Common';
 import { GlobalState } from '../redux/reducers';
 
 interface Props {
@@ -124,10 +124,11 @@ class CheatSheet extends Component<Props, State> {
         });
     })
 
-    getTypePriority(type: Material) {
-        if (type.isRecyclable === true) {
+    getTypePriority(material: Material) {
+        var recyclable = isRecyclable(material);
+        if (recyclable === true) {
             return 0;
-        } else if (type.isRecyclable === false) {
+        } else if (recyclable === false) {
             return 1;
         } else {
             return 2;
@@ -143,7 +144,7 @@ class CheatSheet extends Component<Props, State> {
     renderListItem({ item }: { item: Material }) {
         return  (
             <View style={{ flexDirection: 'row', alignItems: 'center', height: 50, paddingHorizontal: 20 }}>
-                {getRecyclabilityIcon(item.isRecyclable, 25, { flex: 1 })}
+                {getRecyclabilityIcon(isRecyclable(item), 25, { flex: 1 })}
                 <View style={{ flex: 5, flexDirection: 'row' }}>
                     <Text style={styles.defaultText}>{getMaterialDescription(item)}</Text>
                 </View>

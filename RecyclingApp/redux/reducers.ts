@@ -12,93 +12,109 @@ export interface GlobalState {
 
 interface RecyclingState {
     materials: Material[],
+    recyclabilityMap: Map<number, boolean>,
 }
 
 var initialRecyclingState: RecyclingState = {
     materials: [
         {
+            id: 0,
             type: 'plastic',
             plasticNumber: 1,
             name: 'Polyethylene Terephthalate',
             code: 'PETE',
-            isRecyclable: true,
         },
         {
+            id: 1,
             type: 'plastic',
             plasticNumber: 2,
             name: 'High-Density Polyethylene',
             code: 'HDPE',
-            isRecyclable: true,
         },
         {
+            id: 2,
             type: 'plastic',
             plasticNumber: 3,
             name: 'Polyvinyl Chloride',
             code: 'PVC',
-            isRecyclable: false,
         },
         {
+            id: 3,
             type: 'plastic',
             plasticNumber: 4,
             name: 'Low-Density Polyethylene',
             code: 'LDPE',
-            isRecyclable: false,
         },
         {
+            id: 4,
             type: 'plastic',
             plasticNumber: 5,
             name: 'Polypropylene',
             code: 'PP',
-            isRecyclable: false,
         },
         {
+            id: 5,
             type: 'plastic',
             plasticNumber: 6,
             name: 'Polystyrene',
             code: 'PS',
-            isRecyclable: true,
         },
         {
+            id: 6,
             type: 'plastic',
             plasticNumber: 7,
             name: 'Other',
-            isRecyclable: true,
         },
         {
+            id: 7,
             type: 'glass',
             name: 'Brown glass',
-            isRecyclable: true,
         },
         {
+            id: 8,
             type: 'glass',
             name: 'Green glass',
-            isRecyclable: true,
         },
         {
+            id: 9,
             type: 'glass',
             name: 'Clear glass',
-            isRecyclable: true,
         },
         {
+            id: 10,
             type: 'metal',
             name: 'Steel',
-            isRecyclable: true,
         },
         {
+            id: 11,
             type: 'metal',
             name: 'Tin',
-            isRecyclable: true,
         },
         {
+            id: 12,
             type: 'metal',
             name: 'Aluminum',
-            isRecyclable: true,
         },
         {
+            id: 13,
             type: 'paper',
             name: 'Newspaper',
         },
     ],
+    recyclabilityMap: new Map<number, boolean>([
+        [0, true],
+        [1, true],
+        [2, false],
+        [3, false],
+        [4, false],
+        [5, true],
+        [6, true],
+        [7, true],
+        [8, true],
+        [9, true],
+        [10, true],
+        [11, true],
+    ])
 }
 
 export var recyclingReducer = (state = initialRecyclingState, action: ReduxAction) => {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { Button } from 'react-native-elements'
-import ModalSelector from 'react-native-modal-selector';
+import ModalSelector, { IOption } from 'react-native-modal-selector';
 import { connect } from 'react-redux';
 
 import Item from '../interfaces/Item';
@@ -34,13 +34,37 @@ class NewItem extends Component<Props, State> {
 
     render() {
 
+        var materialTypes: string[] = [];
+        this.props.materials.forEach(material => {
+            if (!materialTypes.includes(material.type)) {
+                materialTypes.push(material.type);
+            }
+        })
+
         let index = 0;
-        const modalData = this.props.materials.map(material => {
+        var modalSections: IOption[] = materialTypes.map(materialType => {
             return {
                 key: index++,
-                label: getMaterialDescription(material),
+                section: true,
+                label: materialType,
             }
         });
+
+        var modalData: IOption[] = [];
+
+        modalSections.forEach(modalSection => {
+            modalData.push(modalSection);
+            modalData = modalData.concat(this.props.materials.filter(material => {
+                return material.type === modalSection.label;
+            }).map(material => {
+                return {
+                    key: index++,
+                    label: getMaterialDescription(material),
+                }
+            }));
+        })
+
+
 
         return (
             <View style={{ padding: 20 }}>
@@ -48,7 +72,7 @@ class NewItem extends Component<Props, State> {
                 <Text style={styles.defaultText}>Name of item:</Text>
                 <TextInput
                     style={styles.textBox}
-                    placeholder={'ie. Dasani water'}
+                    placeholder={'ie. Dasani water bottle'}
                     value={this.state.name}
                     onChangeText={name => { this.setState({ name }) }}
                 />
@@ -58,7 +82,7 @@ class NewItem extends Component<Props, State> {
                     style={{ paddingTop: 20 }}
                     data={modalData}
                     initValue={this.defaultMaterialOption}
-                    onChange={option => this.setState({ materialName: option.label })}
+                    onChange={option => this.setState({ materialName: option.label ?? '' })}
                 >
                 </ModalSelector>
 
