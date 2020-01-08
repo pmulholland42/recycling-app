@@ -40,7 +40,7 @@ export class BarcodeInfo extends Component<Props, State> {
         return null; /*{
             name: 'Folger\'s Noir Golden Dusk Instant Coffee',
             type: {
-                materialType: 'glass',
+                type: 'glass',
                 name: 'Clear glass',
                 isRecyclable: true,
             },
@@ -56,9 +56,9 @@ export class BarcodeInfo extends Component<Props, State> {
             );
         } else if (this.state.item) {
             var recycabilityInfo: string;
-            if (this.state.item.type.isRecyclable === true) {
+            if (this.state.item.material.isRecyclable === true) {
                 recycabilityInfo = 'This item can be recycled!';
-            } else if (this.state.item.type.isRecyclable === false) {
+            } else if (this.state.item.material.isRecyclable === false) {
                 recycabilityInfo = 'This item cannot be recycled.';
             } else {
                 recycabilityInfo = 'This item\'s recycability status in your area is unknown.';
@@ -67,7 +67,7 @@ export class BarcodeInfo extends Component<Props, State> {
             return (
                 <View style={{ alignItems: 'center' }}>
                     <Text style={styles.headerText}>{this.state.item.name}</Text>
-                    {getRecyclablityIcon(this.state.item.type.isRecyclable, 70)}
+                    {getRecyclablityIcon(this.state.item.material.isRecyclable, 70)}
                     <Text style={styles.headerText}>{recycabilityInfo}</Text>
                     <Button
                             title={'Continue scanning'}

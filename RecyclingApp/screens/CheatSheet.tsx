@@ -3,22 +3,22 @@ import { View, Text, FlatList } from 'react-native';
 import memoize from 'memoize-one';
 import { connect } from 'react-redux'
 
-import RecyclingType from '../interfaces/RecyclingType';
+import Material from '../interfaces/Material';
 import colors from '../constants/colors';
 import styles from '../constants/styles';
 import getRecyclablityIcon from '../utilities/Common';
 import { GlobalState } from '../redux/reducers';
 
 interface Props {
-    recyclingTypes: RecyclingType[]
+    materials: Material[]
 };
 interface State {
     loading: boolean,
 };
 
-class CheckListScreen extends Component<Props, State> {
+class CheatSheet extends Component<Props, State> {
     static navigationOptions = {
-        title: 'Check List',
+        title: 'Cheat Sheet',
     };
 
     constructor(props: Props) {
@@ -31,100 +31,100 @@ class CheckListScreen extends Component<Props, State> {
         this.renderHeader = this.renderHeader.bind(this);
     }
 
-    /*async getRecyclingTypes(): Promise<RecyclingType[]> {
+    /*async getRecyclingTypes(): Promise<Material[]> {
         return [
             {
-                materialType: 'plastic',
+                type: 'plastic',
                 plasticNumber: 1,
                 name: 'Polyethylene Terephthalate',
                 code: 'PETE',
                 isRecyclable: true,
             },
             {
-                materialType: 'plastic',
+                type: 'plastic',
                 plasticNumber: 2,
                 name: 'High-Density Polyethylene',
                 code: 'HDPE',
                 isRecyclable: true,
             },
             {
-                materialType: 'plastic',
+                type: 'plastic',
                 plasticNumber: 3,
                 name: 'Polyvinyl Chloride',
                 code: 'PVC',
                 isRecyclable: false,
             },
             {
-                materialType: 'plastic',
+                type: 'plastic',
                 plasticNumber: 4,
                 name: 'Low-Density Polyethylene',
                 code: 'LDPE',
                 isRecyclable: false,
             },
             {
-                materialType: 'plastic',
+                type: 'plastic',
                 plasticNumber: 5,
                 name: 'Polypropylene',
                 code: 'PP',
                 isRecyclable: false,
             },
             {
-                materialType: 'plastic',
+                type: 'plastic',
                 plasticNumber: 6,
                 name: 'Polystyrene',
                 code: 'PS',
                 isRecyclable: true,
             },
             {
-                materialType: 'plastic',
+                type: 'plastic',
                 plasticNumber: 7,
                 name: 'Other',
                 isRecyclable: true,
             },
             {
-                materialType: 'glass',
+                type: 'glass',
                 name: 'Brown glass',
                 isRecyclable: true,
             },
             {
-                materialType: 'glass',
+                type: 'glass',
                 name: 'Green glass',
                 isRecyclable: true,
             },
             {
-                materialType: 'glass',
+                type: 'glass',
                 name: 'Clear glass',
                 isRecyclable: true,
             },
             {
-                materialType: 'metal',
+                type: 'metal',
                 name: 'Steel',
                 isRecyclable: true,
             },
             {
-                materialType: 'metal',
+                type: 'metal',
                 name: 'Tin',
                 isRecyclable: true,
             },
             {
-                materialType: 'metal',
+                type: 'metal',
                 name: 'Aluminum',
                 isRecyclable: true,
             },
             {
-                materialType: 'paper',
+                type: 'paper',
                 name: 'Newspaper',
             },
         ];
     }*/
 
-    sortRecyclingTypes = memoize((types: RecyclingType[]) => {
+    sortRecyclingTypes = memoize((types: Material[]) => {
         return types.sort((typeA, typeB) => {
             return this.getTypePriority(typeA) - this.getTypePriority(typeB);
         });
     })
 
-    getTypePriority(type: RecyclingType) {
+    getTypePriority(type: Material) {
         if (type.isRecyclable === true) {
             return 0;
         } else if (type.isRecyclable === false) {
@@ -140,20 +140,7 @@ class CheckListScreen extends Component<Props, State> {
         )
     }
 
-    renderListItem({ item }: { item: RecyclingType }) {
-        let iconName: string;
-        let iconColor: string;
-        if (item.isRecyclable === true) {
-            iconName = 'check';
-            iconColor = colors.secondaryGreen;
-        } else if (item.isRecyclable === false) {
-            iconName = 'ban';
-            iconColor = colors.orange;
-
-        } else {
-            iconName = 'question';
-            iconColor = 'black';
-        }
+    renderListItem({ item }: { item: Material }) {
 
         let itemDescription: string;
         if (item.plasticNumber) {
@@ -176,7 +163,7 @@ class CheckListScreen extends Component<Props, State> {
     }
 
     render() {
-        var renderData = this.sortRecyclingTypes(this.props.recyclingTypes);
+        var renderData = this.sortRecyclingTypes(this.props.materials);
 
         return (
             <View>
@@ -196,8 +183,8 @@ class CheckListScreen extends Component<Props, State> {
 
 const mapStateToProps = (state: GlobalState) => {
     return {
-        recyclingTypes: state.recyclingTypesReducer.recyclingTypes,
+        materials: state.recyclingReducer.materials,
     };
 }
 
-export default connect(mapStateToProps)(CheckListScreen);
+export default connect(mapStateToProps)(CheatSheet);

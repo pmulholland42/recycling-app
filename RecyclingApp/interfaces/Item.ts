@@ -1,6 +1,6 @@
-import RecyclingType from "./RecyclingType";
+import Material from "./Material";
 
 export default interface Item {
     name: string,
-    type: RecyclingType,
+    material: Material,
 }

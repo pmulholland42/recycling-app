@@ -5,14 +5,14 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
-import { recyclingTypesReducer } from './redux/reducers';
+import { recyclingReducer } from './redux/reducers';
 
 import NewItem from './components/NewItem';
-import { Scanner } from './components/Scanner'
-import CheckListScreen from './screens/CheckListScreen'
+import { Scanner } from './components/Scanner';
+import CheatSheet from './screens/CheatSheet';
 import colors from './constants/colors';
 
-var reducers = combineReducers({ recyclingTypesReducer });
+var reducers = combineReducers({ recyclingReducer });
 export var store = createStore(reducers);
 
 const ScannerStack = createStackNavigator({
@@ -28,7 +28,7 @@ ScannerStack.navigationOptions = {
 const TabNavigator = createBottomTabNavigator(
     {
         ScannerStack,
-        CheckListScreen,
+        CheatSheet,
     },
     {
         defaultNavigationOptions: ({ navigation }) => ({
@@ -37,7 +37,7 @@ const TabNavigator = createBottomTabNavigator(
                 let iconName: string = 'question';
                 if (routeName === 'ScannerStack') {
                     iconName = 'barcode';
-                } else if (routeName === 'CheckListScreen') {
+                } else if (routeName === 'CheatSheet') {
                     iconName = 'check-square-o';
                 }
 

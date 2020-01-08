@@ -6,16 +6,16 @@ import { connect } from 'react-redux';
 
 import Item from '../interfaces/Item';
 import styles from '../constants/styles';
-import RecyclingType from '../interfaces/RecyclingType';
+import Material from '../interfaces/Material';
 import { GlobalState } from 'redux/reducers';
 
 interface Props {
     barcode: string,
-    recyclingTypes: RecyclingType[],
+    materials: Material[],
 };
 interface State {
     name: string,
-    typeName: string,
+    materialName: string,
 };
 
 class NewItem extends Component<Props, State> {
@@ -27,14 +27,14 @@ class NewItem extends Component<Props, State> {
 
         this.state = {
             name: '',
-            typeName: '',
+            materialName: '',
         }
     }
 
     render() {
 
         let index = 0;
-        const modalData = this.props.recyclingTypes.map(type => {
+        const modalData = this.props.materials.map(type => {
             return {
                 key: index++,
                 label: type.name,
@@ -52,12 +52,12 @@ class NewItem extends Component<Props, State> {
                     onChangeText={name => { this.setState({ name }) }}
                 />
 
-                <Text style={styles.defaultText}>Material type:</Text>
+                <Text style={styles.defaultText}>Material:</Text>
                 <ModalSelector
                     style={{ paddingTop: 20 }}
                     data={modalData}
                     initValue={this.defaultTypeOption}
-                    onChange={option => this.setState({ typeName: option.label })}
+                    onChange={option => this.setState({ materialName: option.label })}
                 >
                 </ModalSelector>
 
@@ -69,7 +69,7 @@ class NewItem extends Component<Props, State> {
 
 const mapStateToProps = (state: GlobalState) => {
     return {
-        recyclingTypes: state.recyclingTypesReducer.recyclingTypes,
+        materials: state.recyclingReducer.materials,
     };
 }
 export default connect(mapStateToProps)(NewItem);
