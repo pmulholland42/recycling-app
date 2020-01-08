@@ -7,9 +7,9 @@ import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import { recyclingTypesReducer } from './redux/reducers';
 
-import { NewItem } from './components/NewItem';
+import NewItem from './components/NewItem';
 import { Scanner } from './components/Scanner'
-import { CheckListScreen } from './screens/CheckListScreen'
+import CheckListScreen from './screens/CheckListScreen'
 import colors from './constants/colors';
 
 var reducers = combineReducers({ recyclingTypesReducer });

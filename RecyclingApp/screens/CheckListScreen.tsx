@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import memoize from 'memoize-one'
+import memoize from 'memoize-one';
+import { connect } from 'react-redux'
 
 import RecyclingType from '../interfaces/RecyclingType';
 import colors from '../constants/colors';
 import styles from '../constants/styles';
 import getRecyclablityIcon from '../utilities/Common';
+import { GlobalState } from '../redux/reducers';
 
-interface Props {};
+interface Props {
+    recyclingTypes: RecyclingType[]
+};
 interface State {
     loading: boolean,
-    types: RecyclingType[],
 };
 
-export class CheckListScreen extends Component<Props, State> {
+class CheckListScreen extends Component<Props, State> {
     static navigationOptions = {
         title: 'Check List',
     };
@@ -22,19 +24,14 @@ export class CheckListScreen extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            loading: true,
-            types: [],
+            loading: false,
         }
 
         this.renderListItem = this.renderListItem.bind(this);
         this.renderHeader = this.renderHeader.bind(this);
-
-        this.getRecyclingTypes().then(types => {
-            this.setState({ loading: false, types });
-        });
     }
 
-    async getRecyclingTypes(): Promise<RecyclingType[]> {
+    /*async getRecyclingTypes(): Promise<RecyclingType[]> {
         return [
             {
                 materialType: 'plastic',
@@ -119,7 +116,7 @@ export class CheckListScreen extends Component<Props, State> {
                 name: 'Newspaper',
             },
         ];
-    }
+    }*/
 
     sortRecyclingTypes = memoize((types: RecyclingType[]) => {
         return types.sort((typeA, typeB) => {
@@ -179,7 +176,7 @@ export class CheckListScreen extends Component<Props, State> {
     }
 
     render() {
-        var renderData = this.sortRecyclingTypes(this.state.types);
+        var renderData = this.sortRecyclingTypes(this.props.recyclingTypes);
 
         return (
             <View>
@@ -196,3 +193,11 @@ export class CheckListScreen extends Component<Props, State> {
         )
     }
 }
+
+const mapStateToProps = (state: GlobalState) => {
+    return {
+        recyclingTypes: state.recyclingTypesReducer.recyclingTypes,
+    };
+}
+
+export default connect(mapStateToProps)(CheckListScreen);

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { Button } from 'react-native-elements'
 
-import { NewItem } from './NewItem'
+import NewItem from './NewItem'
 import Item from '../interfaces/Item';
 import getRecyclablityIcon from '../utilities/Common';
 import styles from '../constants/styles';
