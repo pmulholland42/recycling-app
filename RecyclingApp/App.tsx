@@ -9,7 +9,7 @@ import { recyclingReducer } from './redux/reducers';
 
 import NewItem from './components/NewItem';
 import { Scanner } from './components/Scanner';
-import CheatSheet from './screens/CheatSheet';
+import CheatSheet from './components/CheatSheet';
 import colors from './constants/colors';
 
 var reducers = combineReducers({ recyclingReducer });
