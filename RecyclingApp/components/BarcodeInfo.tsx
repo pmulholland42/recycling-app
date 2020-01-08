@@ -4,7 +4,7 @@ import { Button } from 'react-native-elements'
 
 import NewItem from './NewItem'
 import Item from '../interfaces/Item';
-import getRecyclablityIcon from '../utilities/Common';
+import { getRecyclabilityIcon } from '../utilities/Common';
 import styles from '../constants/styles';
 import colors from '../constants/colors';
 
@@ -67,7 +67,7 @@ export class BarcodeInfo extends Component<Props, State> {
             return (
                 <View style={{ alignItems: 'center' }}>
                     <Text style={styles.headerText}>{this.state.item.name}</Text>
-                    {getRecyclablityIcon(this.state.item.material.isRecyclable, 70)}
+                    {getRecyclabilityIcon(this.state.item.material.isRecyclable, 70)}
                     <Text style={styles.headerText}>{recycabilityInfo}</Text>
                     <Button
                             title={'Continue scanning'}

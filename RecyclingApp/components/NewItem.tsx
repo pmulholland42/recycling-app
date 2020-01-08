@@ -8,6 +8,7 @@ import Item from '../interfaces/Item';
 import styles from '../constants/styles';
 import Material from '../interfaces/Material';
 import { GlobalState } from 'redux/reducers';
+import { getMaterialDescription } from '../utilities/Common';
 
 interface Props {
     barcode: string,
@@ -20,7 +21,7 @@ interface State {
 
 class NewItem extends Component<Props, State> {
 
-    defaultTypeOption = 'Select material type';
+    defaultMaterialOption = 'Select material type';
 
     constructor(props: Props) {
         super(props);
@@ -34,10 +35,10 @@ class NewItem extends Component<Props, State> {
     render() {
 
         let index = 0;
-        const modalData = this.props.materials.map(type => {
+        const modalData = this.props.materials.map(material => {
             return {
                 key: index++,
-                label: type.name,
+                label: getMaterialDescription(material),
             }
         });
 
@@ -56,7 +57,7 @@ class NewItem extends Component<Props, State> {
                 <ModalSelector
                     style={{ paddingTop: 20 }}
                     data={modalData}
-                    initValue={this.defaultTypeOption}
+                    initValue={this.defaultMaterialOption}
                     onChange={option => this.setState({ materialName: option.label })}
                 >
                 </ModalSelector>

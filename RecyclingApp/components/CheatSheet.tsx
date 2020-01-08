@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import Material from '../interfaces/Material';
 import colors from '../constants/colors';
 import styles from '../constants/styles';
-import getRecyclablityIcon from '../utilities/Common';
+import { getRecyclabilityIcon, getMaterialDescription} from '../utilities/Common';
 import { GlobalState } from '../redux/reducers';
 
 interface Props {
@@ -141,22 +141,11 @@ class CheatSheet extends Component<Props, State> {
     }
 
     renderListItem({ item }: { item: Material }) {
-
-        let itemDescription: string;
-        if (item.plasticNumber) {
-            itemDescription = `Plastic #${item.plasticNumber} - ${item.name}`;
-        } else {
-            itemDescription = item.name;
-        }
-        if (item.code) {
-            itemDescription += ` (${item.code})`;
-        }
-
         return  (
             <View style={{ flexDirection: 'row', alignItems: 'center', height: 50, paddingHorizontal: 20 }}>
-                {getRecyclablityIcon(item.isRecyclable, 25, { flex: 1 })}
+                {getRecyclabilityIcon(item.isRecyclable, 25, { flex: 1 })}
                 <View style={{ flex: 5, flexDirection: 'row' }}>
-                    <Text style={styles.defaultText}>{itemDescription}</Text>
+                    <Text style={styles.defaultText}>{getMaterialDescription(item)}</Text>
                 </View>
             </View>
         )
