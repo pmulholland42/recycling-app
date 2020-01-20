@@ -26,12 +26,14 @@ export class Scanner extends Component<Props, State> {
 
     camera: RNCamera | null;
     scanCooldown: number;
+    scanCooldownTimer: number;
 
     constructor(props: Props) {
         super(props);
 
         this.camera = null;
         this.scanCooldown = 1000;
+        this.scanCooldownTimer = -1;
 
         this.state = {
             barcode: null,
@@ -47,6 +49,10 @@ export class Scanner extends Component<Props, State> {
         this.stopScanning = this.stopScanning.bind(this);
         this.addItem = this.addItem.bind(this);
         this.updateLayout = this.updateLayout.bind(this);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.scanCooldownTimer);
     }
 
     onBarcodeDetected(event: {
