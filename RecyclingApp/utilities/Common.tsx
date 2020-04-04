@@ -4,6 +4,8 @@ import colors from '../constants/colors'
 import { StyleProp, TextStyle } from 'react-native';
 import Material from 'interfaces/Material';
 import { store } from '../App'
+import { Location } from '../redux/reducers';
+import { apiKey } from '../apiKey';
 
 export function getRecyclabilityIcon(isRecyclable: boolean | undefined, size: number, style?: StyleProp<TextStyle>) {
     let iconName: string;
@@ -40,4 +42,12 @@ export function getMaterialDescription(material: Material): string {
 export function isRecyclable(material: Material): boolean | undefined {
     var recyclabilityMap = store.getState().recyclingReducer.recyclabilityMap;
     return recyclabilityMap.get(material.id);
+}
+
+export function getLocationName(location: Location): Promise<string> {
+    console.log('getting location name...');
+    let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=1&key=${apiKey}`;
+    return fetch(url).then(response => response.json()).then(data => {
+        return data.results[0].name;
+    });
 }

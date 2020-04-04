@@ -4,14 +4,13 @@ import memoize from 'memoize-one';
 import { connect } from 'react-redux'
 
 import Material from '../interfaces/Material';
-import colors from '../constants/colors';
 import styles from '../constants/styles';
-import { getRecyclabilityIcon, getMaterialDescription, isRecyclable} from '../utilities/Common';
+import { getRecyclabilityIcon, getMaterialDescription, isRecyclable } from '../utilities/Common';
 import { GlobalState, Location } from '../redux/reducers';
 
 interface Props {
     materials: Material[],
-    location: Location,
+    locationName: string,
 };
 interface State {
     loading: boolean,
@@ -31,6 +30,7 @@ class CheatSheet extends Component<Props, State> {
         this.renderListItem = this.renderListItem.bind(this);
         this.renderHeader = this.renderHeader.bind(this);
     }
+
 
     /*async getRecyclingTypes(): Promise<Material[]> {
         return [
@@ -138,7 +138,7 @@ class CheatSheet extends Component<Props, State> {
 
     renderHeader() {
         return (
-            <Text style={styles.headerText}>Your recycling info for {this.props.location.latitude.toFixed(3)}, {this.props.location.longitude.toFixed(3)}:</Text>
+            <Text style={styles.headerText}>Your recycling info for {this.props.locationName}:</Text>
         )
     }
 
@@ -175,7 +175,7 @@ class CheatSheet extends Component<Props, State> {
 const mapStateToProps = (state: GlobalState) => {
     return {
         materials: state.recyclingReducer.materials,
-        location: state.locationReducer.location,
+        locationName: state.locationReducer.locationName,
     };
 }
 

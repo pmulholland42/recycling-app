@@ -1,4 +1,4 @@
-import { SET_MATERIALS, SET_LOCATION } from './actions';
+import { SET_MATERIALS, SET_LOCATION, SET_LOCATION_NAME } from './actions';
 import Material from '../interfaces/Material';
 
 export interface ReduxAction {
@@ -135,14 +135,16 @@ export interface Location {
 }
 
 interface LocationState {
-    location: Location
+    location: Location,
+    locationName: string,
 }
 
 const initialLocationState: LocationState = {
     location: {
         latitude: 0,
         longitude: 0,
-    }
+    },
+    locationName: '',
 }
 
 export const locationReducer = (state = initialLocationState, action: ReduxAction) => {
@@ -150,6 +152,9 @@ export const locationReducer = (state = initialLocationState, action: ReduxActio
     switch (action.type) {
         case SET_LOCATION:
             newState = { ...state, location: action.payload.location };
+            return newState;
+        case SET_LOCATION_NAME:
+            newState = { ...state, locationName: action.payload.locationName };
             return newState;
         default:
             return state;

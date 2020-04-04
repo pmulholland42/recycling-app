@@ -5,15 +5,16 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
-import { recyclingReducer, locationReducer } from './redux/reducers';
+import { recyclingReducer, locationReducer, Location } from './redux/reducers';
 import Geolocation, { GeolocationResponse } from '@react-native-community/geolocation';
 
 import NewItem from './components/NewItem';
 import { Scanner } from './components/Scanner';
 import CheatSheet from './components/CheatSheet';
 import colors from './constants/colors';
-import { SET_LOCATION } from './redux/actions';
+import { SET_LOCATION, SET_LOCATION_NAME } from './redux/actions';
 import { PermissionsAndroid } from 'react-native';
+import { getLocationName } from './utilities/Common';
 
 var reducers = combineReducers({ recyclingReducer, locationReducer });
 export var store = createStore(reducers);
@@ -59,16 +60,24 @@ const AppContainer = createAppContainer(TabNavigator);
 
 const App = () => {
     const updateLocation = (position: GeolocationResponse) => {
+        let newLocation: Location = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+        }
         store.dispatch({
             type: SET_LOCATION,
             payload: {
-                location: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                }
+                location: newLocation
             }
         });
-        console.log(position.coords.latitude);
+        getLocationName(newLocation).then(locationName => {
+            store.dispatch({
+                type: SET_LOCATION_NAME,
+                payload: {
+                    locationName,
+                }
+            })
+        });
     };
 
     const getLocationPermission = async () => {
