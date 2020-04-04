@@ -151,7 +151,7 @@ export class Scanner extends Component<Props, State> {
                 <View style={{ alignItems: "center", justifyContent: "center", height: "100%" }}>
                     <View style={{ width: "75%" }}>
                         <Button
-                            title={"Press to begin scannning"}
+                            title={"Press to begin scanning"}
                             onPress={this.startScanning}
                             buttonStyle={{
                                 backgroundColor: colors.primaryGreen,

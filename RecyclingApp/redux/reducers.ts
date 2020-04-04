@@ -1,4 +1,4 @@
-import { SET_MATERIALS } from './actions';
+import { SET_MATERIALS, SET_LOCATION } from './actions';
 import Material from '../interfaces/Material';
 
 export interface ReduxAction {
@@ -8,6 +8,7 @@ export interface ReduxAction {
 
 export interface GlobalState {
     recyclingReducer: RecyclingState,
+    locationReducer: LocationState,
 }
 
 interface RecyclingState {
@@ -15,7 +16,7 @@ interface RecyclingState {
     recyclabilityMap: Map<number, boolean>,
 }
 
-var initialRecyclingState: RecyclingState = {
+const initialRecyclingState: RecyclingState = {
     materials: [
         {
             id: 0,
@@ -117,11 +118,38 @@ var initialRecyclingState: RecyclingState = {
     ])
 }
 
-export var recyclingReducer = (state = initialRecyclingState, action: ReduxAction) => {
+export const recyclingReducer = (state = initialRecyclingState, action: ReduxAction) => {
     var newState: RecyclingState;
     switch (action.type) {
         case SET_MATERIALS:
             newState = { ...state, materials: action.payload.materials };
+            return newState;
+        default:
+            return state;
+    }
+}
+
+export interface Location {
+    latitude: number,
+    longitude: number,
+}
+
+interface LocationState {
+    location: Location
+}
+
+const initialLocationState: LocationState = {
+    location: {
+        latitude: 0,
+        longitude: 0,
+    }
+}
+
+export const locationReducer = (state = initialLocationState, action: ReduxAction) => {
+    let newState: LocationState;
+    switch (action.type) {
+        case SET_LOCATION:
+            newState = { ...state, location: action.payload.location };
             return newState;
         default:
             return state;

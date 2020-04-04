@@ -1,1 +1,3 @@
 export const SET_MATERIALS = 'SET_MATERIALS';
+
+export const SET_LOCATION = 'SET_LOCATION';
