@@ -103,7 +103,7 @@ const App = () => {
         }, {
             useSignificantChanges: true,
         });
-    })
+    }, [])
 
     return (
         <Provider store={store}>

@@ -15,7 +15,7 @@ interface Props {
     onStopScanning: () => void,
 };
 interface State {
-    isScanning: boolean,
+    isCameraOpen: boolean,
     canScan: boolean,
     modalVisible: boolean,
     barcode: string | null,
@@ -24,20 +24,24 @@ interface State {
 
 export class Scanner extends Component<Props, State> {
 
-    camera: RNCamera | null;
+    /**
+     * The time, in ms, between closing the modal and when scanning becomes enabled again
+     */
     scanCooldown: number;
+    /**
+     * The setTimeout timer id for the scan cooldown
+     */
     scanCooldownTimer: number;
 
     constructor(props: Props) {
         super(props);
 
-        this.camera = null;
         this.scanCooldown = 1000;
         this.scanCooldownTimer = -1;
 
         this.state = {
             barcode: null,
-            isScanning: false,
+            isCameraOpen: false,
             canScan: true,
             modalVisible: false,
             screenWidth: Dimensions.get('screen').width,
@@ -49,6 +53,13 @@ export class Scanner extends Component<Props, State> {
         this.stopScanning = this.stopScanning.bind(this);
         this.addItem = this.addItem.bind(this);
         this.updateLayout = this.updateLayout.bind(this);
+    }
+
+    componentDidMount() {
+        // After we navigate back to the scanner from the add item screen, scanning should be enabled
+        this.props.navigation.addListener('didFocus', () => {
+            this.setState({ canScan: true });
+        })
     }
 
     componentWillUnmount() {
@@ -66,31 +77,32 @@ export class Scanner extends Component<Props, State> {
         bounds: { width: number, height: number, origin: Array<Point<string>> } | { origin: Point<string>; size: Size<string> };
       })
     {
-        if (this.state.isScanning && this.state.canScan) {
+        if (this.state.isCameraOpen && this.state.canScan) {
             this.setState({ barcode: event.data, canScan: false, modalVisible: true });
         }
     }
 
     startScanning() {
-        this.setState({ isScanning: true });
+        this.setState({ isCameraOpen: true });
     }
 
     stopScanning() {
-        this.closeModal();
-        this.setState({ isScanning: false });
+        this.setState({ isCameraOpen: false });
     }
 
     closeModal() {
         this.setState({ modalVisible: false }, () => {
-            setTimeout(() => {
+            this.scanCooldownTimer = setTimeout(() => {
                 this.setState({ canScan: true });
             }, this.scanCooldown);
         });
     }
 
     addItem() {
-        this.closeModal();
-        this.props.navigation.navigate('NewItem');
+        // Close the modal, then go the the new item screen
+        this.setState({ modalVisible: false }, () => {
+            this.props.navigation.navigate('NewItem');
+        });
     }
 
     updateLayout(event: LayoutChangeEvent) {
@@ -100,12 +112,11 @@ export class Scanner extends Component<Props, State> {
     render() {
         let buttonWidth = this.state.screenWidth / 2;
 
-        if (this.state.isScanning) {
+        if (this.state.isCameraOpen) {
             return (
             <View onLayout={this.updateLayout}>
                 <RNCamera
                     style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}
-                    ref={ref => this.camera = ref}
                     captureAudio={false}
                     onBarCodeRead={this.onBarcodeDetected}
                 >

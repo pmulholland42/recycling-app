@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import Material from '../interfaces/Material';
 import styles from '../constants/styles';
 import { getRecyclabilityIcon, getMaterialDescription, isRecyclable } from '../utilities/Common';
-import { GlobalState, Location } from '../redux/reducers';
+import { GlobalState } from '../redux/reducers';
 
 interface Props {
     materials: Material[],
