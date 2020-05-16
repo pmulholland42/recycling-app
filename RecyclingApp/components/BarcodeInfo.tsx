@@ -4,7 +4,7 @@ import { Button } from 'react-native-elements'
 
 import NewItem from './NewItem'
 import Item from '../interfaces/Item';
-import { getRecyclabilityIcon, isRecyclable } from '../utilities/Common';
+import { getRecyclabilityIcon, isRecyclable } from '../utilities/common';
 import styles from '../constants/styles';
 import colors from '../constants/colors';
 

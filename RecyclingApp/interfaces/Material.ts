@@ -1,5 +1,5 @@
 export default interface Material {
-    id: number,
+    id: string,
     type: 'plastic' | 'glass' | 'metal' | 'paper',
     plasticNumber?: number,
     name: string,

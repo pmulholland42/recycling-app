@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { createStore, combineReducers } from 'redux';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import { recyclingReducer, locationReducer, Location } from './redux/reducers';
 import Geolocation, { GeolocationResponse } from '@react-native-community/geolocation';
 
@@ -14,10 +14,16 @@ import CheatSheet from './components/CheatSheet';
 import colors from './constants/colors';
 import { SET_LOCATION, SET_LOCATION_NAME } from './redux/actions';
 import { PermissionsAndroid } from 'react-native';
-import { getLocationName } from './utilities/Common';
+import { getLocationName } from './utilities/common';
+import { getMaterials } from './utilities/api';
+import { setMaterials } from './redux/actionCreators';
 
 var reducers = combineReducers({ recyclingReducer, locationReducer });
-export var store = createStore(reducers);
+export const store = createStore(reducers);
+
+getMaterials().then(materials => {
+    store.dispatch(setMaterials(materials))
+});
 
 const ScannerStack = createStackNavigator({
     Scanner,
@@ -81,12 +87,14 @@ const App = () => {
     };
 
     const getLocationPermission = async () => {
-        return await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+        return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
             title: 'RecycleBuddy Location Permission',
             message: 'RecycleBuddy needs access to your location to determine what you can recycle in your area',
             buttonNeutral: 'Not now',
             buttonPositive: 'OK',
             buttonNegative: 'Cancel',
+        }).catch(error => {
+            console.warn(`Error requesting location permission: ${error}`);
         });
     }
 
@@ -103,7 +111,7 @@ const App = () => {
         }, {
             useSignificantChanges: true,
         });
-    }, [])
+    }, []);
 
     return (
         <Provider store={store}>
@@ -111,6 +119,7 @@ const App = () => {
         </Provider>
     );
 }
+
 
 export default App;
 

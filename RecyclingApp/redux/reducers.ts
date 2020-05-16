@@ -1,10 +1,6 @@
 import { SET_MATERIALS, SET_LOCATION, SET_LOCATION_NAME } from './actions';
 import Material from '../interfaces/Material';
 
-export interface ReduxAction {
-    type: string,
-    payload: any,
-}
 
 export interface GlobalState {
     recyclingReducer: RecyclingState,
@@ -13,116 +9,33 @@ export interface GlobalState {
 
 interface RecyclingState {
     materials: Material[],
-    recyclabilityMap: Map<number, boolean>,
+    recyclabilityMap: Map<string, boolean>,
 }
 
 const initialRecyclingState: RecyclingState = {
-    materials: [
-        {
-            id: 0,
-            type: 'plastic',
-            plasticNumber: 1,
-            name: 'Polyethylene Terephthalate',
-            code: 'PETE',
-        },
-        {
-            id: 1,
-            type: 'plastic',
-            plasticNumber: 2,
-            name: 'High-Density Polyethylene',
-            code: 'HDPE',
-        },
-        {
-            id: 2,
-            type: 'plastic',
-            plasticNumber: 3,
-            name: 'Polyvinyl Chloride',
-            code: 'PVC',
-        },
-        {
-            id: 3,
-            type: 'plastic',
-            plasticNumber: 4,
-            name: 'Low-Density Polyethylene',
-            code: 'LDPE',
-        },
-        {
-            id: 4,
-            type: 'plastic',
-            plasticNumber: 5,
-            name: 'Polypropylene',
-            code: 'PP',
-        },
-        {
-            id: 5,
-            type: 'plastic',
-            plasticNumber: 6,
-            name: 'Polystyrene',
-            code: 'PS',
-        },
-        {
-            id: 6,
-            type: 'plastic',
-            plasticNumber: 7,
-            name: 'Other',
-        },
-        {
-            id: 7,
-            type: 'glass',
-            name: 'Brown glass',
-        },
-        {
-            id: 8,
-            type: 'glass',
-            name: 'Green glass',
-        },
-        {
-            id: 9,
-            type: 'glass',
-            name: 'Clear glass',
-        },
-        {
-            id: 10,
-            type: 'metal',
-            name: 'Steel',
-        },
-        {
-            id: 11,
-            type: 'metal',
-            name: 'Tin',
-        },
-        {
-            id: 12,
-            type: 'metal',
-            name: 'Aluminum',
-        },
-        {
-            id: 13,
-            type: 'paper',
-            name: 'Newspaper',
-        },
-    ],
-    recyclabilityMap: new Map<number, boolean>([
-        [0, true],
-        [1, true],
-        [2, false],
-        [3, false],
-        [4, false],
-        [5, true],
-        [6, true],
-        [7, true],
-        [8, true],
-        [9, true],
-        [10, true],
-        [11, true],
+    materials: [],
+    recyclabilityMap: new Map<string, boolean>([
+        ['7pWLj3irsgkjXafCBJFm', true],
+        ['9Kk6lSJ4Ty1Pi9b6WhOk', true],
+        ['9jyEuTtaGYmZ2z7ogAUX', false],
+        ['ABN6O15sPGALbMoegr1J', false],
+        ['CYVfnHoF0UqK94CprkjW', false],
+        ['DjDYoTXkcnQmqUnRc9CW', true],
+        ['Q7S2DdXQO6jc5HsUPQyB', true],
+        ['TaAVvsGKLmnFuwfQKtAv', true],
+        ['UpG5fm5BaV7udJn46FLS', true],
+        ['YpMkVaD2pySuhMtd8xeJ', true],
+        ['lJ0aegU9Slk4rJsEslFA', true],
+        ['oN9rTiXfg02ubbfi3ZdS', true],
     ])
 }
 
-export const recyclingReducer = (state = initialRecyclingState, action: ReduxAction) => {
+export const recyclingReducer = (state = initialRecyclingState, action: any) => {
     var newState: RecyclingState;
     switch (action.type) {
         case SET_MATERIALS:
             newState = { ...state, materials: action.payload.materials };
+            console.log(newState.materials);
             return newState;
         default:
             return state;
@@ -147,7 +60,7 @@ const initialLocationState: LocationState = {
     locationName: '',
 }
 
-export const locationReducer = (state = initialLocationState, action: ReduxAction) => {
+export const locationReducer = (state = initialLocationState, action: any) => {
     let newState: LocationState;
     switch (action.type) {
         case SET_LOCATION:

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import Material from '../interfaces/Material';
 import styles from '../constants/styles';
-import { getRecyclabilityIcon, getMaterialDescription, isRecyclable } from '../utilities/Common';
+import { getRecyclabilityIcon, getMaterialDescription, isRecyclable } from '../utilities/common';
 import { GlobalState } from '../redux/reducers';
 
 interface Props {
@@ -31,97 +31,15 @@ class CheatSheet extends Component<Props, State> {
         this.renderHeader = this.renderHeader.bind(this);
     }
 
-
-    /*async getRecyclingTypes(): Promise<Material[]> {
-        return [
-            {
-                type: 'plastic',
-                plasticNumber: 1,
-                name: 'Polyethylene Terephthalate',
-                code: 'PETE',
-                isRecyclable: true,
-            },
-            {
-                type: 'plastic',
-                plasticNumber: 2,
-                name: 'High-Density Polyethylene',
-                code: 'HDPE',
-                isRecyclable: true,
-            },
-            {
-                type: 'plastic',
-                plasticNumber: 3,
-                name: 'Polyvinyl Chloride',
-                code: 'PVC',
-                isRecyclable: false,
-            },
-            {
-                type: 'plastic',
-                plasticNumber: 4,
-                name: 'Low-Density Polyethylene',
-                code: 'LDPE',
-                isRecyclable: false,
-            },
-            {
-                type: 'plastic',
-                plasticNumber: 5,
-                name: 'Polypropylene',
-                code: 'PP',
-                isRecyclable: false,
-            },
-            {
-                type: 'plastic',
-                plasticNumber: 6,
-                name: 'Polystyrene',
-                code: 'PS',
-                isRecyclable: true,
-            },
-            {
-                type: 'plastic',
-                plasticNumber: 7,
-                name: 'Other',
-                isRecyclable: true,
-            },
-            {
-                type: 'glass',
-                name: 'Brown glass',
-                isRecyclable: true,
-            },
-            {
-                type: 'glass',
-                name: 'Green glass',
-                isRecyclable: true,
-            },
-            {
-                type: 'glass',
-                name: 'Clear glass',
-                isRecyclable: true,
-            },
-            {
-                type: 'metal',
-                name: 'Steel',
-                isRecyclable: true,
-            },
-            {
-                type: 'metal',
-                name: 'Tin',
-                isRecyclable: true,
-            },
-            {
-                type: 'metal',
-                name: 'Aluminum',
-                isRecyclable: true,
-            },
-            {
-                type: 'paper',
-                name: 'Newspaper',
-            },
-        ];
-    }*/
-
     sortRecyclingTypes = memoize((types: Material[]) => {
         return types.sort((typeA, typeB) => {
-            return this.getTypePriority(typeA) - this.getTypePriority(typeB);
+            let priorityDifference = this.getTypePriority(typeA) - this.getTypePriority(typeB);
+            if (priorityDifference == 0) {
+                // Sort ties alphabetically
+                return getMaterialDescription(typeA).localeCompare(getMaterialDescription(typeB));
+            } else {
+                return priorityDifference;
+            }
         });
     })
 

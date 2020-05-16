@@ -8,7 +8,7 @@ import Item from '../interfaces/Item';
 import styles from '../constants/styles';
 import Material from '../interfaces/Material';
 import { GlobalState } from 'redux/reducers';
-import { getMaterialDescription } from '../utilities/Common';
+import { getMaterialDescription } from '../utilities/common';
 import colors from '../constants/colors';
 import { NavigationStackProp } from 'react-navigation-stack';
 
