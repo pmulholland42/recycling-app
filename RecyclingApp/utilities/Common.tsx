@@ -3,7 +3,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../constants/colors'
 import { StyleProp, TextStyle } from 'react-native';
 import Material from 'interfaces/Material';
-import { store } from '../App'
+import { store } from '../redux/store';
 import { Location } from '../redux/reducers';
 import { apiKey } from '../apiKey';
 

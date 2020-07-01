@@ -3,9 +3,9 @@ import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { createStore, combineReducers } from 'redux';
-import { Provider, connect } from 'react-redux';
-import { recyclingReducer, locationReducer, Location } from './redux/reducers';
+import { Provider } from 'react-redux';
+import { Location } from './redux/reducers';
+import { store } from './redux/store';
 import Geolocation, { GeolocationResponse } from '@react-native-community/geolocation';
 
 import NewItem from './components/NewItem';
@@ -17,9 +17,6 @@ import { PermissionsAndroid } from 'react-native';
 import { getLocationName } from './utilities/common';
 import { getMaterials } from './utilities/api';
 import { setMaterials } from './redux/actionCreators';
-
-var reducers = combineReducers({ recyclingReducer, locationReducer });
-export const store = createStore(reducers);
 
 getMaterials().then(materials => {
     store.dispatch(setMaterials(materials))

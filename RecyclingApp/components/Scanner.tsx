@@ -24,13 +24,9 @@ interface State {
 
 export class Scanner extends Component<Props, State> {
 
-    /**
-     * The time, in ms, between closing the modal and when scanning becomes enabled again
-     */
+    /** The time, in ms, between closing the modal and when scanning becomes enabled again */
     scanCooldown: number;
-    /**
-     * The setTimeout timer id for the scan cooldown
-     */
+    /** The setTimeout timer id for the scan cooldown */
     scanCooldownTimer: number;
 
     constructor(props: Props) {
@@ -78,6 +74,7 @@ export class Scanner extends Component<Props, State> {
       })
     {
         if (this.state.isCameraOpen && this.state.canScan) {
+            console.log(event.data);
             this.setState({ barcode: event.data, canScan: false, modalVisible: true });
         }
     }
@@ -159,17 +156,17 @@ export class Scanner extends Component<Props, State> {
             </View> );
         } else {
             return (
-                <View style={{ alignItems: "center", justifyContent: "center", height: "100%" }}>
-                    <View style={{ width: "75%" }}>
+                <View style={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                    <View style={{ width: '75%' }}>
                         <Button
-                            title={"Press to begin scanning"}
+                            title={'Press to begin scanning'}
                             onPress={this.startScanning}
                             buttonStyle={{
                                 backgroundColor: colors.primaryGreen,
                                 height: 100,
                             }}
                             titleStyle={{
-                                textAlign: "center"
+                                textAlign: 'center'
                             }}
                         />
                     </View>

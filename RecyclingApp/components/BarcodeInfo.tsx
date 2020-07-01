@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { Button } from 'react-native-elements'
 
-import NewItem from './NewItem'
 import Item from '../interfaces/Item';
 import { getRecyclabilityIcon, isRecyclable } from '../utilities/common';
 import styles from '../constants/styles';
 import colors from '../constants/colors';
+import { fetchItemFromFirestore } from '../utilities/api';
 
 interface Props {
     barcodeData: string,
@@ -19,7 +19,6 @@ interface State {
 };
 
 export class BarcodeInfo extends Component<Props, State> {
-
 
     constructor(props: Props) {
         super(props);
@@ -37,14 +36,7 @@ export class BarcodeInfo extends Component<Props, State> {
     }
 
     async checkBarcode(barcode: string): Promise<Item | null> {
-        return null; /*{
-            name: 'Folger\'s Noir Golden Dusk Instant Coffee',
-            material: {
-                id: 8,
-                type: 'glass',
-                name: 'Clear glass',
-            },
-        };*/
+        return fetchItemFromFirestore(barcode);
     }
 
     render() {
@@ -54,7 +46,7 @@ export class BarcodeInfo extends Component<Props, State> {
                     <Text>Loading...</Text>
                 </View>
             );
-        } else if (this.state.item) {
+        } else if (this.state.item !== null) {
             var recyclable = isRecyclable(this.state.item.material);
             var recycabilityInfo: string;
             if (recyclable === true) {
