@@ -14,7 +14,7 @@ import CheatSheet from './components/CheatSheet';
 import colors from './constants/colors';
 import { SET_LOCATION, SET_LOCATION_NAME } from './redux/actions';
 import { PermissionsAndroid } from 'react-native';
-import { getLocationName } from './utilities/common';
+import { getLocationName } from './utilities/api';
 import { getMaterials } from './utilities/api';
 import { setMaterials } from './redux/actionCreators';
 

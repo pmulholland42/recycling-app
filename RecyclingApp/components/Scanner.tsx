@@ -15,13 +15,22 @@ interface Props {
     onStopScanning: () => void,
 };
 interface State {
+    /** Is the camera / barcode scanner enabled? */
     isCameraOpen: boolean,
+    /** Is scanning enabled (not on cooldown)? */
     canScan: boolean,
+    /** Is the barcode info modal visible */
     modalVisible: boolean,
+    /** The string representation of the last scanned barcode. Null if not scanned yet. */
     barcode: string | null,
+    /** Current screen width in pixels */
     screenWidth: number,
 };
 
+/**
+ * Barcode scanner that can be toggled on and off. 
+ * Opens the barcode info modal when a barcode is detected.
+ */
 export class Scanner extends Component<Props, State> {
 
     /** The time, in ms, between closing the modal and when scanning becomes enabled again */
@@ -62,6 +71,10 @@ export class Scanner extends Component<Props, State> {
         clearTimeout(this.scanCooldownTimer);
     }
 
+    /**
+     * Called when a barcode is scanned. Opens the barcode info modal.
+     * @param event 
+     */
     onBarcodeDetected(event: {
         data: string;
         rawData?: string;
@@ -79,14 +92,23 @@ export class Scanner extends Component<Props, State> {
         }
     }
 
+    /**
+     * Enables the camera and barcode scanner
+     */
     startScanning() {
         this.setState({ isCameraOpen: true });
     }
 
+    /**
+     * Disables the camera and barcode scanner
+     */
     stopScanning() {
         this.setState({ isCameraOpen: false });
     }
 
+    /**
+     * Closes the barcode info modal
+     */
     closeModal() {
         this.setState({ modalVisible: false }, () => {
             this.scanCooldownTimer = setTimeout(() => {
@@ -95,13 +117,19 @@ export class Scanner extends Component<Props, State> {
         });
     }
 
+    /**
+     * Closes the modal, then go the the new item screen
+     */
     addItem() {
-        // Close the modal, then go the the new item screen
         this.setState({ modalVisible: false }, () => {
             this.props.navigation.navigate('NewItem');
         });
     }
 
+    /**
+     * Updates the screen width when the orientation changes
+     * @param event 
+     */
     updateLayout(event: LayoutChangeEvent) {
         this.setState({ screenWidth: Dimensions.get('screen').width });
     }
@@ -112,12 +140,14 @@ export class Scanner extends Component<Props, State> {
         if (this.state.isCameraOpen) {
             return (
             <View onLayout={this.updateLayout}>
+                {/* Camera / barcode scanner */}
                 <RNCamera
                     style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}
                     captureAudio={false}
                     onBarCodeRead={this.onBarcodeDetected}
                 >
 
+                    {/* Barcode info modal */}
                     <Dialog
                         visible={this.state.modalVisible}
                         onTouchOutside={this.closeModal}
@@ -133,11 +163,12 @@ export class Scanner extends Component<Props, State> {
                         </DialogContent>
                     </Dialog>
 
-
+                    {/* Scanner square icon */}
                     { !this.state.modalVisible && <View style={{ height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                         <Image source={scannerBoxImage} />
                     </View> }
 
+                    {/* Stop scanning button */}
                     { !this.state.modalVisible && <View style={{ position: 'absolute', width: buttonWidth, bottom: 20 }}>
                         <Button
                             title={'Stop scanning'}
@@ -158,6 +189,7 @@ export class Scanner extends Component<Props, State> {
             return (
                 <View style={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}>
                     <View style={{ width: '75%' }}>
+                        {/* Start scanning button */}
                         <Button
                             title={'Press to begin scanning'}
                             onPress={this.startScanning}

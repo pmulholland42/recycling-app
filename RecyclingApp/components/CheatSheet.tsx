@@ -10,12 +10,17 @@ import { GlobalState } from '../redux/reducers';
 
 interface Props {
     materials: Material[],
+    /** The name of municipality / city that the user is in */
     locationName: string,
 };
 interface State {
     loading: boolean,
 };
 
+/**
+ * A list of materials and an icon indicating whether each of them is recyclable.
+ * For quick reference without scanning.
+ */
 class CheatSheet extends Component<Props, State> {
     static navigationOptions = {
         title: 'Cheat Sheet',
@@ -43,8 +48,12 @@ class CheatSheet extends Component<Props, State> {
         });
     })
 
+    /**
+     * Get the sorting priority of a material, based on its recyclability status
+     * @param material
+     */
     getTypePriority(material: Material) {
-        var recyclable = isRecyclable(material);
+        let recyclable = isRecyclable(material);
         if (recyclable === true) {
             return 0;
         } else if (recyclable === false) {
@@ -63,7 +72,9 @@ class CheatSheet extends Component<Props, State> {
     renderListItem({ item }: { item: Material }) {
         return  (
             <View style={{ flexDirection: 'row', alignItems: 'center', height: 50, paddingHorizontal: 20 }}>
+                {/* Checkmark, X, or question mark icon */}
                 {getRecyclabilityIcon(isRecyclable(item), 25, { flex: 1 })}
+                {/* Material name and description */}
                 <View style={{ flex: 5, flexDirection: 'row' }}>
                     <Text style={styles.defaultText}>{getMaterialDescription(item)}</Text>
                 </View>
@@ -72,7 +83,7 @@ class CheatSheet extends Component<Props, State> {
     }
 
     render() {
-        var renderData = this.sortRecyclingTypes(this.props.materials);
+        const renderData = this.sortRecyclingTypes(this.props.materials);
 
         return (
             <View>

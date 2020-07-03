@@ -4,9 +4,16 @@ import colors from '../constants/colors'
 import { StyleProp, TextStyle } from 'react-native';
 import Material from 'interfaces/Material';
 import { store } from '../redux/store';
-import { Location } from '../redux/reducers';
-import { apiKey } from '../apiKey';
+import AsyncStorage from '@react-native-community/async-storage';
 
+// Miscellaneous utlity functions
+
+/**
+ * Returns the checkmark, X, or question mark icon for a material
+ * @param isRecyclable Is the material recyclable? If undefined, returns the ? icon
+ * @param size Size of the icon
+ * @param style (optional) Style passed to the icon.
+ */
 export function getRecyclabilityIcon(isRecyclable: boolean | undefined, size: number, style?: StyleProp<TextStyle>) {
     let iconName: string;
     let iconColor: string;
@@ -26,6 +33,10 @@ export function getRecyclabilityIcon(isRecyclable: boolean | undefined, size: nu
     );
 }
 
+/**
+ * Gets the display data for a material (e.g. 'Plastic #4 - Low-Density Polyethylene (LDPE)')
+ * @param material 
+ */
 export function getMaterialDescription(material: Material): string {
     let description: string;
     if (material.plasticNumber) {
@@ -39,15 +50,35 @@ export function getMaterialDescription(material: Material): string {
     return description;
 }
 
+/**
+ * Checks if a material is recyclable
+ * @param material 
+ * @returns true if recyclable, false if not, undefined if unknown
+ */
 export function isRecyclable(material: Material): boolean | undefined {
     var recyclabilityMap = store.getState().recyclingReducer.recyclabilityMap;
     return recyclabilityMap.get(material.id);
 }
 
-export function getLocationName(location: Location): Promise<string> {
-    console.log('getting location name...');
-    let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=1&key=${apiKey}`;
-    return fetch(url).then(response => response.json()).then(data => {
-        return data.results[0].name;
-    });
+/**
+ * Converts an async network request function into a cached async function. 
+ * The first time this is called, it will make the network request.
+ * The returned data is then stored locally for future calls.
+ * @param apiCall The async function to cachify. The return data must be must be JSON serializable.
+ * @param storageKey A unique string for this function, used to store and retrieve the request data locally.
+ * @returns An async function with the same signature as the real async function.
+ */
+export function cachify<T extends (...args: any[]) => Promise<any>>(apiCall: T, storageKey: string) {
+    return function(...args: Parameters<T>): ReturnType<T> {
+        return AsyncStorage.getItem(storageKey).then(localData => {
+            if (localData == null) {
+                return apiCall(...args).then(fetchedData => {
+                    AsyncStorage.setItem(storageKey, JSON.stringify(fetchedData));
+                    return fetchedData;
+                });
+            } else {
+                return JSON.parse(localData);
+            }
+        }) as ReturnType<T>
+    }
 }

@@ -4,24 +4,32 @@ import { Button } from 'react-native-elements'
 import ModalSelector, { IOption } from 'react-native-modal-selector';
 import { connect } from 'react-redux';
 
-import Item from '../interfaces/Item';
 import styles from '../constants/styles';
 import Material from '../interfaces/Material';
 import { GlobalState } from 'redux/reducers';
 import { getMaterialDescription } from '../utilities/common';
 import colors from '../constants/colors';
 import { NavigationStackProp } from 'react-navigation-stack';
+import memoize from 'memoize-one';
 
 interface Props {
     navigation: NavigationStackProp<{}>,
+    /** The barcode that was scanned for the new item */
     barcode: string,
+    /** Materials list */
     materials: Material[],
 };
 interface State {
+    /** The name of the item entered in the text box */
     itemName: string,
+    /** The name of the material selected in the modal selector */
     materialName: string,
 };
 
+/**
+ * Screen that allows the user to create a new item.
+ * Prompts the user for the name and material type of their item.
+ */
 class NewItem extends Component<Props, State> {
 
     defaultMaterialOption = 'Select material type';
@@ -38,65 +46,80 @@ class NewItem extends Component<Props, State> {
         this.onCancelPress = this.onCancelPress.bind(this);
     }
 
+    /**
+     * Called when the done button is pressed
+     */
     onDonePress() {
         // TODO: add new item to db
         this.props.navigation.navigate('Scanner');
     }
 
+    /**
+     * Called when the cancel button is pressed
+     */
     onCancelPress() {
         this.props.navigation.navigate('Scanner');
     }
 
-    render() {
-        var materialTypes: string[] = [];
-        this.props.materials.forEach(material => {
+    /**
+     * Get the options for the modal selector
+     */
+    getModalOptions = memoize((materials: Material[]): IOption[] => {
+        // Material types are the broader categories of materials, like glass and plastic
+        let materialTypes: string[] = [];
+        materials.forEach(material => {
             if (!materialTypes.includes(material.type)) {
                 materialTypes.push(material.type);
             }
         })
 
-        let index = 0;
-        var modalSections: IOption[] = materialTypes.map(materialType => {
-            return {
-                key: index++,
+        let modalOptions: IOption[] = [];
+        materialTypes.forEach(materialType => {
+            // Add the material type as a section header
+            modalOptions.push({
+                key: materialType,
                 section: true,
                 label: materialType,
-            }
-        });
+            });
 
-        var modalData: IOption[] = [];
-
-        modalSections.forEach(modalSection => {
-            modalData.push(modalSection);
-            modalData = modalData.concat(this.props.materials.filter(material => {
-                return material.type === modalSection.label;
+            // Add all the materials of this type as options
+            modalOptions = modalOptions.concat(materials.filter(material => {
+                return material.type === materialType;
             }).map(material => {
                 return {
-                    key: index++,
+                    key: material.id,
                     label: getMaterialDescription(material),
                 }
             }));
-        })
+        });
 
+        return modalOptions;
+    })
 
+    render() {
+
+        const modalOptions = this.getModalOptions(this.props.materials);
 
         return (
             <View style={{ padding: 20, justifyContent: 'space-between' }}>
 
                 <View>
                     <Text style={styles.headerText}>Add a new item</Text>
+
+                    {/* Item name textbox */}
                     <Text style={styles.defaultText}>Name of item:</Text>
                     <TextInput
                         style={styles.textBox}
-                        placeholder={'ie. Dasani water bottle'}
+                        placeholder={'e.g. Dasani water bottle'}
                         value={this.state.itemName}
                         onChangeText={itemName => { this.setState({ itemName }) }}
                     />
 
+                    {/* Material modal selector */}
                     <Text style={styles.defaultText}>Material:</Text>
                     <ModalSelector
                         style={{ paddingTop: 20 }}
-                        data={modalData}
+                        data={modalOptions}
                         initValue={this.defaultMaterialOption}
                         onChange={option => this.setState({ materialName: option.label ?? '' })}
                     >
@@ -105,12 +128,14 @@ class NewItem extends Component<Props, State> {
 
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingTop: 30 }}>
+                    {/* Cancel button */}
                     <Button
                         title={'Cancel'}
                         style={{ flex: 1 }}
                         buttonStyle={{ backgroundColor: 'grey' }}
                         onPress={this.onCancelPress}
                     />
+                    {/* Done button */}
                     <Button
                         title={'Done'}
                         disabled={ !this.state.itemName || !this.state.materialName }

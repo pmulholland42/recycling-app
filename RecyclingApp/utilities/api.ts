@@ -1,8 +1,12 @@
 import firestore from '@react-native-firebase/firestore';
 import Material from 'interfaces/Material';
-import AsyncStorage from '@react-native-community/async-storage';
 import Item from 'interfaces/Item';
 import { store } from '../redux/store';
+import { cachify } from '../utilities/common';
+import { Location } from '../redux/reducers';
+import { apiKey } from '../apiKey'; // Google Maps api key
+
+// API call functions
 
 const MATERIALS_COLLECTION = 'materials';
 const MATERIALS_STORAGE_KEY = 'materials';
@@ -10,6 +14,9 @@ const ITEMS_COLLECTION = 'items';
 
 export const getMaterials = cachify(fetchMaterialsFromFirestore, MATERIALS_STORAGE_KEY);
 
+/**
+ * Fetches the list of materials from firestore database
+ */
 function fetchMaterialsFromFirestore(): Promise<Material[]> {
     return firestore().collection(MATERIALS_COLLECTION).get().then(snapshot => {
         return snapshot.docs.map(doc => {
@@ -26,6 +33,11 @@ function fetchMaterialsFromFirestore(): Promise<Material[]> {
     });
 }
 
+/**
+ * Fetches item data from the firestore database based on a barcode
+ * @param barcode The barcode data of the item
+ * @throws 'Material X not found' if the fetched item's material is unknown.
+ */
 export function fetchItemFromFirestore(barcode: string): Promise<Item | null> {
     return firestore().collection(ITEMS_COLLECTION).doc(barcode).get().then(doc => {
         if (doc.exists) {
@@ -48,17 +60,14 @@ export function fetchItemFromFirestore(barcode: string): Promise<Item | null> {
     })
 }
 
-function cachify<T extends (...args: any[]) => Promise<any>>(apiCall: T, storageKey: string) {
-    return function(...args: Parameters<T>): ReturnType<T> {
-        return AsyncStorage.getItem(storageKey).then(localData => {
-            if (localData == null) {
-                return apiCall(...args).then(fetchedData => {
-                    AsyncStorage.setItem(storageKey, JSON.stringify(fetchedData));
-                    return fetchedData;
-                });
-            } else {
-                return JSON.parse(localData);
-            }
-        }) as ReturnType<T>
-    }
+/**
+ * Gets the name of the municipality/city at a lat-long coord
+ * Uses the Google Maps places api
+ * @param location 
+ */
+export function getLocationName(location: Location): Promise<string> {
+    let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=1&key=${apiKey}`;
+    return fetch(url).then(response => response.json()).then(data => {
+        return data.results[0].name;
+    });
 }
