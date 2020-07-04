@@ -6,7 +6,7 @@ The front end is made with React Native, written with TypeScript.
 
 I'm also using the react-redux library for global state management. This is currently used for location data and material info.
 
-The backend for this app is made with Google's Firebase - specifically, a Cloud Firestore database.
+The backend for this app is a Google Cloud Firestore database.
 
 ## User guide
 TODO: add guide for navigating screens in the app?
