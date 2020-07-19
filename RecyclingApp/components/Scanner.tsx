@@ -122,7 +122,7 @@ export class Scanner extends Component<Props, State> {
      */
     addItem() {
         this.setState({ modalVisible: false }, () => {
-            this.props.navigation.navigate('NewItem');
+            this.props.navigation.navigate('NewItem', { barcode: this.state.barcode });
         });
     }
 

@@ -11,19 +11,23 @@ import Material from '../interfaces/Material';
 import { GlobalState } from '../redux/reducers';
 import { getMaterialDescription } from '../utilities/common';
 import colors from '../constants/colors';
+import { addItem } from '../utilities/api';
 
-interface Props {
-    navigation: NavigationStackProp<{}>,
+interface NewItemParams {
     /** The barcode that was scanned for the new item */
     barcode: string,
+}
+
+interface Props {
+    navigation: NavigationStackProp<NewItemParams>,
     /** Materials list */
     materials: Material[],
 };
 interface State {
     /** The name of the item entered in the text box */
     itemName: string,
-    /** The name of the material selected in the modal selector */
-    materialName: string,
+    /** The id of the material selected in the modal selector */
+    materialId: string | null,
 };
 
 /**
@@ -39,7 +43,7 @@ class NewItem extends Component<Props, State> {
 
         this.state = {
             itemName: '',
-            materialName: '',
+            materialId: null,
         }
 
         this.onDonePress = this.onDonePress.bind(this);
@@ -49,9 +53,11 @@ class NewItem extends Component<Props, State> {
     /**
      * Called when the done button is pressed
      */
-    onDonePress() {
-        // TODO: add new item to db
-        this.props.navigation.navigate('Scanner');
+    async onDonePress() {
+        if (this.state.materialId !== null) {
+            await addItem(this.state.itemName, this.state.materialId, this.props.navigation.getParam('barcode'))
+            this.props.navigation.navigate('Scanner');
+        }
     }
 
     /**
@@ -121,7 +127,7 @@ class NewItem extends Component<Props, State> {
                         style={{ paddingTop: 20 }}
                         data={modalOptions}
                         initValue={this.defaultMaterialOption}
-                        onChange={option => this.setState({ materialName: option.label ?? '' })}
+                        onChange={option => this.setState({ materialId: option.key as string })}
                     >
                     </ModalSelector>
                 </View>
@@ -138,7 +144,7 @@ class NewItem extends Component<Props, State> {
                     {/* Done button */}
                     <Button
                         title={'Done'}
-                        disabled={ !this.state.itemName || !this.state.materialName }
+                        disabled={ this.state.itemName.length === 0 || this.state.materialId === null }
                         style={{ flex: 1 }}
                         buttonStyle={{ backgroundColor: colors.primaryGreen }}
                         onPress={this.onDonePress}

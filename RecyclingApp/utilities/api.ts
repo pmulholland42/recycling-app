@@ -61,6 +61,21 @@ export function fetchItemFromFirestore(barcode: string): Promise<Item | null> {
 }
 
 /**
+ * Adds a new item to firestore
+ * @param itemName The name of the item
+ * @param materialId The id of the material
+ * @param barcode The barcode
+ */
+export function addItem(itemName: string, materialId: string, barcode: string): Promise<void> {
+    let material = firestore().collection(MATERIALS_COLLECTION).doc(materialId);
+    console.log(`Creating item ${barcode}`);
+    return firestore().collection(ITEMS_COLLECTION).doc(barcode).set({
+        name: itemName,
+        material,
+    });
+}
+
+/**
  * Gets the name of the municipality/city at a lat-long coord
  * Uses the Google Maps places api
  * @param location 
@@ -71,3 +86,4 @@ export function getLocationName(location: Location): Promise<string> {
         return data.results[0].name;
     });
 }
+
