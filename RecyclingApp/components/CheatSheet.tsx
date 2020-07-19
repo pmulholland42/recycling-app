@@ -7,11 +7,12 @@ import Material from '../interfaces/Material';
 import styles from '../constants/styles';
 import { getRecyclabilityIcon, getMaterialDescription, isRecyclable } from '../utilities/common';
 import { GlobalState } from '../redux/reducers';
+import { Location } from '../interfaces/Location';
 
 interface Props {
     materials: Material[],
     /** The name of municipality / city that the user is in */
-    locationName: string,
+    location: Location,
 };
 interface State {
     loading: boolean,
@@ -65,7 +66,7 @@ class CheatSheet extends Component<Props, State> {
 
     renderHeader() {
         return (
-            <Text style={styles.headerText}>Your recycling info for {this.props.locationName}:</Text>
+            <Text style={styles.headerText}>Your recycling info for {this.props.location.name}:</Text>
         )
     }
 
@@ -104,7 +105,7 @@ class CheatSheet extends Component<Props, State> {
 const mapStateToProps = (state: GlobalState) => {
     return {
         materials: state.recyclingReducer.materials,
-        locationName: state.locationReducer.locationName,
+        location: state.locationReducer.location,
     };
 }
 

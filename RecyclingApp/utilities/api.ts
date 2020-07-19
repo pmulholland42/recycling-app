@@ -3,14 +3,16 @@ import Material from '../interfaces/Material';
 import Item from '../interfaces/Item';
 import { store } from '../redux/store';
 import { cachify } from './common';
-import { Location } from '../redux/reducers';
+import { LatLong } from '../interfaces/LatLong';
 import { apiKey } from '../apiKey'; // Google Maps api key
+import { Location } from '../interfaces/Location';
 
 // API call functions
 
 const MATERIALS_COLLECTION = 'materials';
 const MATERIALS_STORAGE_KEY = 'materials';
 const ITEMS_COLLECTION = 'items';
+const LOCATIONS_COLLECTION = 'locations';
 
 export const getMaterials = cachify(fetchMaterialsFromFirestore, MATERIALS_STORAGE_KEY);
 
@@ -43,7 +45,6 @@ export function fetchItemFromFirestore(barcode: string): Promise<Item | null> {
         if (doc.exists) {
             let data = doc.data()!;
             let materialId = data.material.id;
-            console.log(store);
             let material = store.getState().recyclingReducer.materials.find(mat => mat.id === materialId);
             if (material !== undefined) {
                 let item: Item = {
@@ -76,14 +77,50 @@ export function addItem(itemName: string, materialId: string, barcode: string): 
 }
 
 /**
- * Gets the name of the municipality/city at a lat-long coord
+ * Gets the name of the municipality/city at a lat/long coord.
  * Uses the Google Maps places api
- * @param location 
+ * @param position The lat/long coord
  */
-export function getLocationName(location: Location): Promise<string> {
-    let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.latitude},${location.longitude}&radius=1&key=${apiKey}`;
+export function getLocation(position: LatLong): Promise<Location> {
+    let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${position.latitude},${position.longitude}&radius=1&key=${apiKey}`;
     return fetch(url).then(response => response.json()).then(data => {
-        return data.results[0].name;
+        return {
+            id: data.results[0].id,
+            name: data.results[0].name,
+        }
     });
+}
+
+/**
+ * Gets the recyclabilty info for a location
+ * @param locationId
+ */
+export function getRecyclabilityInfo(locationId: string): Promise<Map<string, boolean>> {
+    return firestore().collection(LOCATIONS_COLLECTION).doc(locationId).get().then(doc => {
+        if (doc.exists) {
+            let data = doc.data()!;
+            let recyclabilityMap = new Map<string, boolean>();
+            data.recyclables.forEach((recyclable: { material: { id: string }, isRecyclable: boolean }) => {
+                recyclabilityMap.set(recyclable.material.id, recyclable.isRecyclable);
+            });
+            return recyclabilityMap;
+        } else {
+            throw `${locationId} does not exist`;
+        }
+    })
+}
+
+export function addLocation(locationId: string, locationName: string): Promise<void> {
+    let recyclables = store.getState().recyclingReducer.materials.map(mat => {
+        return {
+            isRecyclable: true,
+            material: firestore().collection(MATERIALS_COLLECTION).doc(mat.id),
+        }
+    })
+    console.log(recyclables);
+    return firestore().collection(LOCATIONS_COLLECTION).doc(locationId).set({
+        name: locationName,
+        recyclables,
+    })
 }
 

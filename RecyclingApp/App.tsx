@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Provider } from 'react-redux';
-import { Location } from './redux/reducers';
+import { LatLong } from './interfaces/LatLong';
 import { store } from './redux/store';
 import Geolocation, { GeolocationResponse } from '@react-native-community/geolocation';
 
@@ -12,15 +12,16 @@ import NewItem from './components/NewItem';
 import { Scanner } from './components/Scanner';
 import CheatSheet from './components/CheatSheet';
 import colors from './constants/colors';
-import { SET_LOCATION, SET_LOCATION_NAME } from './redux/actions';
 import { PermissionsAndroid } from 'react-native';
-import { getLocationName } from './utilities/api';
+import { getLocation, getRecyclabilityInfo, addLocation } from './utilities/api';
 import { getMaterials } from './utilities/api';
-import { setMaterials } from './redux/actionCreators';
+import { setMaterials, setLocation, setPosition, setRecyclabilityMap } from './redux/actionCreators';
 
 getMaterials().then(materials => {
     store.dispatch(setMaterials(materials))
 });
+
+//addLocation('d23c7ba1e4c92a9544fde37bc4bf11a9ebd2adfe', 'Pittsburgh');
 
 const ScannerStack = createStackNavigator({
     Scanner,
@@ -62,25 +63,26 @@ const TabNavigator = createBottomTabNavigator(
 const AppContainer = createAppContainer(TabNavigator);
 
 const App = () => {
-    const updateLocation = (position: GeolocationResponse) => {
-        let newLocation: Location = {
+    const updateLocation = async (position: GeolocationResponse) => {
+        // Update GPS position
+        let newPosition: LatLong = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
         }
-        store.dispatch({
-            type: SET_LOCATION,
-            payload: {
-                location: newLocation
-            }
-        });
-        getLocationName(newLocation).then(locationName => {
-            store.dispatch({
-                type: SET_LOCATION_NAME,
-                payload: {
-                    locationName,
-                }
-            })
-        });
+        store.dispatch(setPosition(newPosition));
+
+        // TODO: move these side effects to the setPosition action creator function?
+
+        // Update location
+        let newLocation = await getLocation(newPosition);
+        let oldLocationId = store.getState().locationReducer.location.id;
+        store.dispatch(setLocation(newLocation));
+
+        // If the user moved locations, update recyclability info
+        if (oldLocationId !== newLocation.id) {
+            let recyclabilityMap = await getRecyclabilityInfo(newLocation.id);
+            store.dispatch(setRecyclabilityMap(recyclabilityMap));
+        }
     };
 
     const getLocationPermission = async () => {
