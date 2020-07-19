@@ -3,14 +3,14 @@ import { View, Text, TextInput } from 'react-native';
 import { Button } from 'react-native-elements'
 import ModalSelector, { IOption } from 'react-native-modal-selector';
 import { connect } from 'react-redux';
+import { NavigationStackProp } from 'react-navigation-stack';
+import memoize from 'memoize-one';
 
 import styles from '../constants/styles';
 import Material from '../interfaces/Material';
-import { GlobalState } from 'redux/reducers';
+import { GlobalState } from '../redux/reducers';
 import { getMaterialDescription } from '../utilities/common';
 import colors from '../constants/colors';
-import { NavigationStackProp } from 'react-navigation-stack';
-import memoize from 'memoize-one';
 
 interface Props {
     navigation: NavigationStackProp<{}>,

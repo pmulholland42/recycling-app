@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, Image, Dimensions, LayoutChangeEvent } from 'react-native';
+import { View, Image, Dimensions, LayoutChangeEvent } from 'react-native';
 import { Button } from 'react-native-elements';
-import { RNCamera, Barcode, BarCodeType, Point, Size } from 'react-native-camera';
+import { RNCamera, BarCodeType, Point, Size } from 'react-native-camera';
 import Dialog, { DialogContent } from 'react-native-popup-dialog';
+import { NavigationStackProp } from 'react-navigation-stack';
 
 import { BarcodeInfo } from './BarcodeInfo'
 import colors from '../constants/colors';
-import { NavigationStackProp } from 'react-navigation-stack';
 
 const scannerBoxImage = require('../images/scanner-box.png');
 

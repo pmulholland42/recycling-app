@@ -1,8 +1,8 @@
 import firestore from '@react-native-firebase/firestore';
-import Material from 'interfaces/Material';
-import Item from 'interfaces/Item';
+import Material from '../interfaces/Material';
+import Item from '../interfaces/Item';
 import { store } from '../redux/store';
-import { cachify } from '../utilities/common';
+import { cachify } from './common';
 import { Location } from '../redux/reducers';
 import { apiKey } from '../apiKey'; // Google Maps api key
 
